@@ -8,11 +8,22 @@ senti = Sentiment(pos='positive.txt',
                   encoding='utf-8')
 
 emotion = Emotion()
+words=[]
 with open('无耻之徒_content.txt','r',encoding='utf-8') as f:
     text=f.read()
-    # print(text)
+    for word in text:
+        if word!='\n':
+            words.append(word)
+    # print(words)
+    num_words = len(words)
+    print(num_words)
     result = emotion.emotion_count(text)
+    result2 = senti.sentiment_count(text)
+    pos='{:3f}'.format(result2['pos']/num_words)
+    neg='{:3f}'.format(result2['neg']/num_words)
     print(result)
+    print(result2)
+    print('pos:',pos,'neg:',neg)
 
 
 # #  based on deep learning
