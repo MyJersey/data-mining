@@ -21,6 +21,7 @@ def fetch_data(query_val,page_id):
     blog={
         'mid':mblog['id'],
         'text':mblog['text'],
+        'time':mblog['created_at'],
         'userid':str(mblog['user']['id']),
         'username':mblog['user']['screen_name'],
         'reposts_count':mblog['reposts_count'],
