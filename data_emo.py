@@ -1,31 +1,60 @@
 # 中文情感分析
 from cnsenti import Sentiment
 from cnsenti import Emotion
+import json
 
-senti = Sentiment(pos='positive.txt',  
-                  neg='negative.txt', 
+senti = Sentiment(pos='./dict/positive.txt',  
+                  neg='./dict/negative.txt', 
                   merge=True,  
                   encoding='utf-8')
 
 emotion = Emotion()
-words=[]
-with open('无耻之徒_content.txt','r',encoding='utf-8') as f:
-    text=f.read()
-    for word in text:
-        if word!='\n':
-            words.append(word)
-    # print(words)
-    num_words = len(words)
-    print(num_words)
-    result = emotion.emotion_count(text)
-    result2 = senti.sentiment_count(text)
-    pos='{:3f}'.format(result2['pos']/num_words)
-    neg='{:3f}'.format(result2['neg']/num_words)
-    print(result)
-    print(result2)
-    print('pos:',pos,'neg:',neg)
+def emo_analysis(file):
+    with open('./{}/{}_content.txt'.format(file,file),'r',encoding='utf-8') as f:
+        text=f.readlines()
+        all_scores=[]
+        for per in text:
+            # if word!='\n':
+            #     words.append(word)
+        # print(words)
+            # print(per)
+            num_words = len(per.rstrip('\n'))
+            # print(num_words)
+            # result = emotion.emotion_count(text)
+            result2 = senti.sentiment_calculate(per)
+            # print(type(result2['pos'].item()))
+            sentiment={
+                'senti_score':{
+                'pos':result2['pos'].item(),
+                'neg':result2['neg'].item(),
+            }}
+            # print(senti_score)
+            all_scores.append(sentiment)
+        # print(all_scores)
+    with open('./{}/{}.json'.format(file,file),'r',encoding='utf-8') as f2:
+            content=json.load(f2)
+            # print(content)
+            data_list=[]
+            for i in range(len(content)):
+                data=content[i]
+                # print(old_data)
+                # print(all_scores[i])
+                data.update(all_scores[i])
+                data_list.append(data)
+            # print(data_list)
+    with open('./{}/{}.json'.format(file,file),'w',encoding='utf-8') as f3:
+        new_data=json.dump(data_list,f3,ensure_ascii=False,indent=1)
+        print('done!!')
+        # pos='{:3f}'.format(result2['pos']/num_words)
+        # neg='{:3f}'.format(result2['neg']/num_words)
+        # print(result)
+        # print(result2)
+        # with open('无耻之徒.json','r',encoding='utf-8') as f:
+        #     old_data=json.load(f)
+        # print('pos:',pos,'neg:',neg)
 
-
+if __name__=='__main__':
+    emo_analysis('巴赫穆特')
 # #  based on deep learning
 # import random
 # import pickle
