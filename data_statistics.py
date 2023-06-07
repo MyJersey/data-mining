@@ -2,6 +2,7 @@ import jieba
 import json
 import collections
 import os
+import csv
 # 以下jieba分词分析
 # 判断是否是中文字符
 def is_chinese(uchar):
@@ -21,8 +22,8 @@ def format_str(content):
 
 # 分别打开输入输出文本文件
 def word_spli(file):
-    input_file=open('./{}/{}_content.txt'.format(file,file),mode='r',encoding='utf-8')
-    output_file=open('./{}/{}_words.txt'.format(file,file),mode='w',encoding='utf-8')
+    input_file=open('./merge/{}_content.txt'.format(file),mode='r',encoding='utf-8')
+    output_file=open('./merge/{}_words.txt'.format(file),mode='w',encoding='utf-8')
 
     # 对每行数据进行中文字符判断格式化
     filelines=input_file.readlines()
@@ -45,7 +46,7 @@ def jsontotxt(file,key):
     # isExists=os.path.exists(file)
     # if not isExists:
     #     os.makedirs(file)
-    f = open('./{}/{}.json'.format(file,file), encoding='utf-8')
+    f = open('./merge/{}.json'.format(file), encoding='utf-8')
     setting = json.load(f)  # 把json文件转化为python用的类型
     f.close()
     values=[]
@@ -53,7 +54,7 @@ def jsontotxt(file,key):
         my_value = setting[i]['{}'.format(key)]  # 提取元素中所需要的的值
         values.append(my_value)
     # print(values)
-    f2=open("./{}/{}_content.txt".format(file,file),'w',encoding='utf-8')
+    f2=open("./merge/{}_content.txt".format(file),'w',encoding='utf-8')
     for line in values:
         f2.write(line+'\n')
     f2.close()
@@ -61,22 +62,37 @@ def jsontotxt(file,key):
 
 
 # 以下词频分析
-def word_coll(file):
+def word_coll(file,filter=[]):
     with open('./dict/stop_words.txt',encoding='utf-8') as f:
         stop=f.readlines()
     stop=[x.strip() for x in stop]
+    for i in range(len(filter)):
+        stop.append(filter[i])
+    # print(stop)
     word_box=[]
-    with open('./{}/{}_words.txt'.format(file,file),'r',encoding='utf-8') as wf,open('./{}/{}word_filtered.txt'.format(file,file),'w',encoding='utf-8') as wf2:
+    with open('./merge/{}_words.txt'.format(file),'r',encoding='utf-8') as wf,open('./merge/{}word_filtered.txt'.format(file),'w',encoding='utf-8') as wf2:
         for word in wf:
             word_box.extend(word.split(' '))
             filtered_woed_box=[x for x in word_box if x not in stop]
         results=collections.Counter(filtered_woed_box)
         for word in results:
             wf2.write(word+' ')
-    print(collections.Counter(word_box).most_common(20))
-    print(collections.Counter(filtered_woed_box).most_common(20))
-
+        word_count=collections.Counter(word_box).most_common(30)
+        filtered_word_count=collections.Counter(filtered_woed_box).most_common(30)
+        print(word_count)
+        print(filtered_word_count)
+    with open('./merge/{}_word_counts.csv'.format(file),'w',encoding='utf-8',newline='') as ff:
+        csvwriter=csv.writer(ff)
+        csvwriter.writerow(('过滤前','数量'))
+        for i in range(len(word_count)):
+            csvwriter.writerow(word_count[i])
+    with open('./merge/{}_flitered_word_counts.csv'.format(file),'w',encoding='utf-8',newline='') as ff2:
+        csvwriter=csv.writer(ff2)
+        csvwriter.writerow(('过滤后','数量'))
+        for j in range(len(filtered_word_count)):
+            csvwriter.writerow(filtered_word_count[j])
 if __name__=='__main__':
     jsontotxt('merge_comments','text')
     word_spli('merge_comments')
-    word_coll('merge_comments')
+    filter=['俄乌','冲突','巴赫','穆特','俄罗斯','乌克兰','微博','俄','乌']
+    word_coll('merge_comments',filter)
