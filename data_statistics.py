@@ -77,6 +77,6 @@ def word_coll(file):
     print(collections.Counter(filtered_woed_box).most_common(20))
 
 if __name__=='__main__':
-    jsontotxt('巴赫穆特','text')
-    word_spli('巴赫穆特')
-    word_coll('巴赫穆特')
+    jsontotxt('merge_comments','text')
+    word_spli('merge_comments')
+    word_coll('merge_comments')

@@ -54,7 +54,7 @@ def emo_analysis(file):
         # print('pos:',pos,'neg:',neg)
 
 if __name__=='__main__':
-    emo_analysis('巴赫穆特')
+    emo_analysis('俄乌冲突')
 # #  based on deep learning
 # import random
 # import pickle

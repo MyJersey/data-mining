@@ -10,7 +10,7 @@ i=0
 def time_visual(file):
     global datetime
     global df
-    with open('./{}/{}.json'.format(file,file),encoding='utf-8') as f:
+    with open('./merge/{}.json'.format(file,file),encoding='utf-8') as f:
         # print(json.load(f))
         data=json.load(f)
         for i in range(len(data)):
@@ -46,4 +46,4 @@ def time_visual(file):
     plt.show()
 
 if __name__=='__main__':
-    time_visual('巴赫穆特')
+    time_visual('merge_comments')

@@ -60,9 +60,9 @@ def fetch_pages(query_val,page_num):
     print("去重后",len(mblogs))
 
     # 创建文件夹
-    # isExists=os.path.exists(query_val)
-    # if not isExists:
-    #     os.makedirs(query_val)
+    isExists=os.path.exists(query_val)
+    if not isExists:
+        os.makedirs(query_val)
     
     # 保存至 result.json中
     with open('./{}./{}.json'.format(query_val,query_val),'w',encoding='utf-8', newline='\n') as f:
@@ -71,6 +71,6 @@ def fetch_pages(query_val,page_num):
 
 
 if __name__=='__main__':
-    fetch_pages('巴赫穆特',5000)
+    fetch_pages('俄乌冲突',5000)
 
 

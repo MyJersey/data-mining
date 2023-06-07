@@ -17,6 +17,6 @@ def cloud_visual(file):
     plt.axis('off')
     plt.show()
 
-    wc.to_file(path.join(d,'./{}/wordcloud.jpg'.format(file)))
+    wc.to_file(path.join(d,'./{}/{}wordcloud.jpg'.format(file,file)))
 if __name__=='__main__':
-    cloud_visual('巴赫穆特')
+    cloud_visual('')
